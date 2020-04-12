@@ -1,6 +1,8 @@
+![Scala CI](https://github.com/aborg0/presentation-helper/workflows/Scala%20CI/badge.svg)
+
 # Presentation helper
 
-A simple tool to help presenting with a git repository
+A simple tool to help present with a git repository
 
 Usage:
  - CheckConfig can be used to check the validity of the `application.conf` (and potentially the `-D` VM arg overrides)
@@ -12,7 +14,9 @@ Example `application.conf` (the hidden branches will hide the display):
 repository = "../../IdeaProjects/free-tagless-compare"
 known-branches = [
     { name = zio},
-    { name = master},
+    { name = master, description = "Main branch"},
     { name = vacation, state.type = hidden },
 ]
 ```
+
+You can override for example the repository with the VM arg `-Drepository=.` setting.

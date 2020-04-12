@@ -4,11 +4,13 @@ import java.io.File
 import java.nio.file._
 
 import com.github.aborg0.presentation_helper.config.AppConfig
+import com.github.aborg0.presentation_helper.config.AppConfig.BranchState
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder
 import pureconfig.ConfigSource
 import pureconfig.generic.auto._
-import scalafx.application.JFXApp
+import scalafx.application.{JFXApp, Platform}
 import scalafx.application.JFXApp.PrimaryStage
+import scalafx.beans.binding.Bindings
 import scalafx.beans.property.StringProperty
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
@@ -38,8 +40,6 @@ object App extends JFXApp {
       watchKey != null
     }) {
       for (event <- watchKey.pollEvents().asScala if event.context().toString == "HEAD") {
-        println(s"${event.context()} ${event.kind}")
-        println(repository.getBranch)
         branchNameProperty.value = repository.getBranch
       }
       watchKey.reset()
@@ -49,6 +49,16 @@ object App extends JFXApp {
   thread.start()
 
   val branchNameProperty = new StringProperty(repository.getBranch)
+  val descriptionProperty = Bindings.createStringBinding(() =>
+    config.knownBranches.find(_.name == repository.getBranch).flatMap(_.description).getOrElse(""), branchNameProperty)
+  val visibleProperty = Bindings.createBooleanBinding(() => config.knownBranches.find(_.name == repository.getBranch)
+    .forall(_.state != BranchState.Hidden), branchNameProperty).addListener(
+    (src, old, newValue) => {
+      if (newValue != stage.isShowing) {
+        Platform.runLater(if (newValue) stage.show() else stage.hide())
+      }
+    }
+  )
   stage = new PrimaryStage {
     //    initStyle(StageStyle.Unified)
     title = "ScalaFX Hello World"
@@ -65,7 +75,7 @@ object App extends JFXApp {
               stops = Stops(Red, DarkRed))
           },
           new Text {
-            text = "FX"
+            text <== descriptionProperty
             style = "-fx-font: italic bold 100pt sans-serif"
             fill = new LinearGradient(
               endX = 0,
@@ -81,5 +91,6 @@ object App extends JFXApp {
       }
     }
     onCloseRequest.addListener(_ => watchService.close())
+    alwaysOnTop = true
   }
 }
