@@ -11,6 +11,7 @@ import pureconfig.generic.auto._
 import scalafx.application.{JFXApp, Platform}
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.beans.binding.Bindings
+import scalafx.beans.binding.Bindings._
 import scalafx.beans.property.StringProperty
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
@@ -51,30 +52,40 @@ object App extends JFXApp {
   val branchNameProperty = new StringProperty(repository.getBranch)
   val descriptionProperty = Bindings.createStringBinding(() =>
     config.knownBranches.find(_.name == repository.getBranch).flatMap(_.description).getOrElse(""), branchNameProperty)
+  val nameProperty = Bindings.createStringBinding(() => config.knownBranches.find(_.name == repository.getBranch)
+    .flatMap(_.displayName).getOrElse(repository.getBranch), branchNameProperty)
   val visibleProperty = Bindings.createBooleanBinding(() => config.knownBranches.find(_.name == repository.getBranch)
-    .forall(_.state != BranchState.Hidden), branchNameProperty).addListener(
+    .forall(_.state != BranchState.Hidden), branchNameProperty)
+
+  visibleProperty.addListener(
     (src, old, newValue) => {
       if (newValue != stage.isShowing) {
-        Platform.runLater(if (newValue) stage.show() else stage.hide())
+        Platform.runLater(if (newValue) stage.toBack() else stage.toFront())
       }
     }
   )
   stage = new PrimaryStage {
     //    initStyle(StageStyle.Unified)
-    title = "ScalaFX Hello World"
+//    initStyle(StageStyle.Transparent)
+    title = "Presentation"
     scene = new Scene {
-      fill = Color.rgb(38, 38, 38)
+      stylesheets = Seq(config.stylePath)
+//      fill <== when (visibleProperty) choose(Color.rgb(38, 38, 38)) otherwise Color.rgb(38, 38, 38, 1d)
+//      fill = Color.rgb(38, 38, 38)
       content = new HBox {
+        id = "main"
         padding = Insets(50, 80, 50, 80)
         children = Seq(
           new Text {
-            text <== branchNameProperty
+            id = "name"
+            text <== nameProperty
             style = "-fx-font: normal bold 100pt sans-serif"
-            fill = new LinearGradient(
-              endX = 0,
-              stops = Stops(Red, DarkRed))
+//            fill = new LinearGradient(
+//              endX = 0,
+//              stops = Stops(Red, DarkRed))
           },
           new Text {
+            id = "description"
             text <== descriptionProperty
             style = "-fx-font: italic bold 100pt sans-serif"
             fill = new LinearGradient(

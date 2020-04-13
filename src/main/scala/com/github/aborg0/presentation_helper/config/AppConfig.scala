@@ -2,13 +2,15 @@ package com.github.aborg0.presentation_helper.config
 
 import com.github.aborg0.presentation_helper.config.AppConfig._
 
-case class AppConfig(repository: String, knownBranches: Seq[Branch]) {
+case class AppConfig(repository: String, knownBranches: Seq[Branch], style: String) {
   def repositoryPath = if (repository.endsWith(".git")) repository else repository + "/.git"
+  def stylePath = if (style.endsWith(".css")) style else style + ".css"
 }
 
 object AppConfig {
 
   case class Branch(name: String,
+                    displayName: Option[String],
                     description: Option[String],
                     state: BranchState = BranchState.Visible)
 
