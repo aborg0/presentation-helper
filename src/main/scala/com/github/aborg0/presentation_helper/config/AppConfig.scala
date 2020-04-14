@@ -2,7 +2,9 @@ package com.github.aborg0.presentation_helper.config
 
 import com.github.aborg0.presentation_helper.config.AppConfig._
 
-case class AppConfig(repository: String, knownBranches: Seq[Branch], style: String) {
+case class AppConfig(repository: String, knownBranches: Seq[Branch], style: String,
+                    transparency: Double = .7,
+                    ) {
   def repositoryPath = if (repository.endsWith(".git")) repository else repository + "/.git"
   def stylePath = if (style.endsWith(".css")) style else style + ".css"
 }

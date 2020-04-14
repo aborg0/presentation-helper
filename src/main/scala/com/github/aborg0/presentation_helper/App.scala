@@ -15,11 +15,13 @@ import scalafx.beans.binding.Bindings._
 import scalafx.beans.property.StringProperty
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
+import scalafx.scene.control.ScrollPane
 import scalafx.scene.effect.DropShadow
-import scalafx.scene.layout.HBox
+import scalafx.scene.layout.{HBox, VBox}
 import scalafx.scene.paint.Color._
 import scalafx.scene.paint.{Color, LinearGradient, Stops}
 import scalafx.scene.text.Text
+import scalafx.stage.StageStyle
 
 import scala.jdk.CollectionConverters._
 
@@ -66,15 +68,16 @@ object App extends JFXApp {
   )
   stage = new PrimaryStage {
     //    initStyle(StageStyle.Unified)
-//    initStyle(StageStyle.Transparent)
+    initStyle(StageStyle.Transparent)
     title = "Presentation"
     scene = new Scene {
       stylesheets = Seq(config.stylePath)
 //      fill <== when (visibleProperty) choose(Color.rgb(38, 38, 38)) otherwise Color.rgb(38, 38, 38, 1d)
 //      fill = Color.rgb(38, 38, 38)
-      content = new HBox {
+      opacity = 1 - config.transparency
+      content = new VBox {
         id = "main"
-        padding = Insets(50, 80, 50, 80)
+//        padding = Insets(50, 80, 50, 80)
         children = Seq(
           new Text {
             id = "name"
@@ -84,18 +87,21 @@ object App extends JFXApp {
 //              endX = 0,
 //              stops = Stops(Red, DarkRed))
           },
-          new Text {
-            id = "description"
-            text <== descriptionProperty
-            style = "-fx-font: italic bold 100pt sans-serif"
-            fill = new LinearGradient(
-              endX = 0,
-              stops = Stops(White, DarkGray)
-            )
-            effect = new DropShadow {
-              color = DarkGray
-              radius = 15
-              spread = 0.25
+          new ScrollPane{
+            content = new Text {
+              id = "description"
+              text <== descriptionProperty
+              style = "-fx-font: italic bold 14pt sans-serif"
+//              fill = new LinearGradient(
+//                endX = 0,
+//                stops = Stops(White, DarkGray)
+//              )
+//              effect = new DropShadow {
+//                color = DarkGray
+//                radius = 15
+//                spread = 0.25
+//              }
+              wrappingWidth = 200
             }
           }
         )
