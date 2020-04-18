@@ -27,7 +27,10 @@ import scala.jdk.CollectionConverters._
 
 
 object App extends JFXApp {
-  val config = ConfigSource.default.loadOrThrow[AppConfig]
+  val config = (parameters.unnamed match {
+    case Seq() => ConfigSource.default
+    case Seq(fileName) => ConfigSource.file(path = fileName)
+  }).loadOrThrow[AppConfig]
 
 
   val watchService = FileSystems.getDefault.newWatchService
