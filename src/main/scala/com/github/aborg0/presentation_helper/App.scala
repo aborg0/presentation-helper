@@ -25,7 +25,7 @@ import scala.jdk.CollectionConverters._
 object App extends JFXApp {
   val config = (parameters.unnamed match {
     case Seq()         => ConfigSource.default
-    case Seq(fileName) => ConfigSource.file(path = fileName)
+    case _ => ConfigSource.file(path = parameters.unnamed.head)
   }).loadOrThrow[AppConfig]
 
   val watchService = FileSystems.getDefault.newWatchService
@@ -80,6 +80,8 @@ object App extends JFXApp {
 
   val manualVisible = BooleanProperty(true)
 
+  val wrapAt = 400
+
   stage = new PrimaryStage {
     //    initStyle(StageStyle.Unified)
     initStyle(StageStyle.Transparent)
@@ -101,19 +103,20 @@ object App extends JFXApp {
           new Text {
             id = "name"
             text <== nameProperty
-            style = "-fx-font: normal bold 100pt sans-serif"
+            style = "-fx-font: normal bold 40pt sans-serif"
             onMouseClicked = (t: input.MouseEvent) => {
               alwaysOnTop = !alwaysOnTop.value
             }
 //            fill = new LinearGradient(
 //              endX = 0,
 //              stops = Stops(Red, DarkRed))
+            wrappingWidth = wrapAt
           },
-          new ScrollPane {
-            content = new Text {
-              id = "description"
+          /*new ScrollPane {
+            content = */new Text {
+            id = "description"
               text <== descriptionProperty
-              style = "-fx-font: italic bold 14pt sans-serif"
+              style = "-fx-font: 14pt sans-serif"
 //              fill = new LinearGradient(
 //                endX = 0,
 //                stops = Stops(White, DarkGray)
@@ -123,9 +126,9 @@ object App extends JFXApp {
 //                radius = 15
 //                spread = 0.25
 //              }
-              wrappingWidth = 200
+              wrappingWidth = wrapAt
             }
-          }
+          /*}*/
         )
       }
     }

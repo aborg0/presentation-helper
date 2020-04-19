@@ -2,5 +2,9 @@
     -fx-background-color: rgb(38, 38, 38);
 }
 #name{
-    -fx-fill: darkRed
+    -fx-fill: lightGreen;
+}
+#description{
+    background: rgb(38, 38, 38);
+    -fx-fill: white;
 }

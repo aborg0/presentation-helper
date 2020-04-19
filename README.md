@@ -12,10 +12,11 @@ Example `application.conf` (the hidden branches will hide the display):
 
 ```hocon
 repository = "../../IdeaProjects/free-tagless-compare"
+style = light
 known-branches = [
     { name = zio},
     { name = master, description = "Main branch"},
-    { name = vacation, state.type = hidden },
+    { name = vacation, display-name = "???", state.type = hidden },
 ]
 ```
 
