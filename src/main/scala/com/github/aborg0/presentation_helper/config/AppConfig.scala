@@ -2,10 +2,17 @@ package com.github.aborg0.presentation_helper.config
 
 import com.github.aborg0.presentation_helper.config.AppConfig._
 
-case class AppConfig(repository: String, knownBranches: Seq[Branch], style: String,
-                    transparency: Double = .7,
-                    ) {
-  def repositoryPath = if (repository.endsWith(".git")) repository else repository + "/.git"
+case class AppConfig(repository: String,
+                     knownBranches: Seq[Branch],
+                     style: String,
+                     transparency: Double = .7,
+                     left: Int = 1500,
+                     top: Int = 130,
+                     width: Int = 410,
+                     height: Int = 870,
+) {
+  def repositoryPath =
+    if (repository.endsWith(".git")) repository else repository + "/.git"
   def stylePath = if (style.endsWith(".css")) style else style + ".css"
 }
 
@@ -19,7 +26,7 @@ object AppConfig {
   sealed trait BranchState
 
   object BranchState {
-    case object Hidden extends BranchState
+    case object Hidden  extends BranchState
     case object Visible extends BranchState
   }
 
