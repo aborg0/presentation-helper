@@ -9,7 +9,7 @@ import javafx.scene.input
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder
 import pureconfig.ConfigSource
 import pureconfig.generic.auto._
-import scalafx.application.JFXApp
+import scalafx.application.{JFXApp, Platform}
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.beans.binding.Bindings
 import scalafx.beans.binding.Bindings._
@@ -46,7 +46,11 @@ object App extends JFXApp {
       }) {
         for (event <- watchKey.pollEvents().asScala
              if event.context().toString == "HEAD") {
-          branchNameProperty.value = repository.getBranch
+          val branchName = repository.getBranch
+          Platform.runLater {
+            branchNameProperty.value = branchName
+            branchNameProperty()
+          }
         }
         watchKey.reset()
       }

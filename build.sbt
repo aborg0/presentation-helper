@@ -28,3 +28,13 @@ libraryDependencies += "com.github.pureconfig" %% "pureconfig" % "0.12.3"
 
 libraryDependencies += "org.scalactic" %% "scalactic" % "3.1.1"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.1.1" % "test"
+
+assembly / mainClass := Some("com.github.aborg0.presentation_helper.App")
+assembly / assemblyMergeStrategy := {
+  case "module-info.class" => MergeStrategy.discard
+  case PathList(ps @ _*) if ps.last == "module-info.class" => MergeStrategy.discard
+case "META-INF/versions/9/module-info.class" => MergeStrategy.discard
+case x =>
+  val oldStrategy = (assemblyMergeStrategy in assembly).value
+  oldStrategy(x)
+}
