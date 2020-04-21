@@ -92,8 +92,8 @@ object App extends JFXApp {
     title = "Presentation"
     x = config.left
     y = config.top
-    width = config.width
-    height = config.height
+    maxWidth = config.width
+    maxHeight = config.height
 
     scene = new Scene {
       stylesheets = Seq(config.stylePath)
